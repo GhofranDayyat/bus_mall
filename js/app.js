@@ -1,4 +1,5 @@
-'use strict'
+/* eslint-disable no-unused-vars */
+'use strict';
 
 //helper functions
 function randomNumber(min, max) {
@@ -115,16 +116,16 @@ function handleClick(event) {
     }
     render();
   }
-
+  createChart();
 
 }
 function resultRender(){
   const division =  document.getElementById('result');
-  console.log('hii')
+  console.log('hii');
   const ulEl = document.createElement('ul');
   division.appendChild(ulEl);
   for (let i = 0; i < Mall.all.length; i++) {
-    console.log('wded')
+    console.log('wded');
     let liEl = document.createElement('li');
     ulEl.appendChild(liEl);
     liEl.textContent= `${Mall.all[i].item}:${Mall.all[i].votes} and  ${Mall.all[i].views} times`;
@@ -132,4 +133,72 @@ function resultRender(){
 }
 
 
-///----------------------------------------------------///
+///-------------------------creat chart---------------------------///
+function createChart (){
+  const ctx = document.getElementById('chart').getContext('2d');
+  const itemName = [];
+  const itemVotes = [];
+  const itemViews = [];
+  for (let i=0; i<Mall.all.length;i++){
+    itemName.push(Mall.all[i].item);
+    itemVotes.push(Mall.all[i].votes);
+    itemViews.push(Mall.all[i].views);
+  }
+  console.log('vots', itemVotes);
+  console.log('views', itemViews );
+
+  // new Chart (ctx,{
+  //   // The type of chart we want to create
+  //   type: 'bar',
+  //   date: {
+  //     lebels: itemName,
+  //     datasets: [
+  //       {
+  //         barpercentage: 0.5,
+  //         label: 'Result of Votes & Views',
+  //         backgroundcolor: 'rgb(100, 125, 50)',
+  //         bordercolor: '#1212',
+  //         data: itemVotes,
+  //       },
+  //     ],
+  //   },
+  //   // Configuration options go here
+  //   options: {},
+  // }
+
+  // );
+  new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
+
+    // The data for our dataset
+    data: {
+      labels: itemName,
+      datasets: [
+        {
+          // barPercentage: 0.8,
+          barThickness: 20,
+          borderWidth: 2.5,
+          label: 'Result of Votes & Views',
+          backgroundColor: 'rgb(0, 0, 200,0.5)',
+          borderColor: 'rgb(0, 0, 0)',
+          data: itemVotes,
+        },{
+          barPercentage: 0.5,
+          barThickness: 20,
+          borderWidth: 2.5,
+          label: 'Result of Votes & Views',
+          backgroundColor: 'rgb(255,99,132,0.2)',
+          borderColor: 'rgb(0, 0, 0)',
+          data: itemVotes,
+        }
+      ],
+    },
+
+    // Configuration options go here
+    options: {},
+
+  } );
+}
+
+
