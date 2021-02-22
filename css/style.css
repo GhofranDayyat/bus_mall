@@ -1,3 +1,9 @@
 main ul {
-    font-size: xx-large;
+    font-size: medium;
+    list-style: circle ;
+
 }
+#left_img, #mid_img, #right_img{
+    width: 300px;
+    height: 300px;
+} 

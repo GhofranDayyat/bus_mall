@@ -9,11 +9,11 @@ const maxClicks=25;
 const product = [];
 
 
-const leftImg = document.getElementById('left img');
+const leftImg = document.getElementById('left_img');
 console.log(leftImg);
-const midImg = document.getElementById('mid img');
+const midImg = document.getElementById('mid_img');
 console.log(midImg);
-const rightImg = document.getElementById('right img');
+const rightImg = document.getElementById('right_img');
 console.log(rightImg);
 const imgSection = document.getElementById('img-section');
 
@@ -50,36 +50,46 @@ const usb = new Mall ('usb', 'img/usb.gif');
 const waterCan = new Mall ('water can', 'img/water-can.jpg');
 const wineGlass = new Mall ('wine glass', 'img/wine-glass.jpg');
 
-for (let i =0 ; i<product.length ; i++){
-  new Mall(product[i]);
-}
+
 console.table(Mall.all); //show objects in table
 
 
 
 
-//render function
-function renderClick() {
-
+//////////////////////////render function//////////////////////////
+function render() {
   const leftIndex = randomNumber (0,Mall.all.length -1);
   leftImg.src = Mall.all[leftIndex].path;
   leftImg.title = Mall.all[leftIndex].item;
   leftImg.alt = Mall.all[leftIndex].item;
-
-
-  const midIndex = randomNumber (0,Mall.all.length -1);
+  let midIndex = randomNumber (0,Mall.all.length -1);
+  while (midIndex === leftIndex) {
+    midIndex = randomNumber (0,Mall.all.length -1);
+  }
   midImg.src = Mall.all[midIndex].path;
   midImg.title = Mall.all[midIndex].item;
   midImg.alt = Mall.all[midIndex].item;
-
-
-  const rightIndex = randomNumber (0,Mall.all.length -1);
+  let rightIndex = randomNumber (0,Mall.all.length -1);
+  while (rightIndex === leftIndex || rightIndex === midIndex) {
+    rightIndex = randomNumber (0,Mall.all.length -1);
+  }
   rightImg.src = Mall.all[rightIndex].path;
   rightImg.title = Mall.all[rightIndex].item;
   rightImg.alt = Mall.all[rightIndex].item;
-
+  for (let i = 0; i < Mall.all.length; i++) {
+    switch (i) {
+    case leftIndex:
+    case midIndex:
+    case rightIndex:
+      Mall.all[i].views++;
+      break;
+    default:
+      break;
+    }
+    console.log('views',Mall.all[i].views);
+  }
 }
-renderClick();
+render();
 
 imgSection.addEventListener('click' , handleClick);
 
@@ -88,6 +98,7 @@ function handleClick(event) {
   if (event.target.id !== 'img-section'){
 
     for( let i=0 ; i<Mall.all.length; i++){
+
       if (Mall.all[i].item=== event.target.title){
         Mall.all[i].votes++; //Mall.all[i].votes =Mall.all[i].votes + 1
 
@@ -95,27 +106,30 @@ function handleClick(event) {
 
       }
     }
-    renderClick();
+
     count = count + 1;
     console.log(count);
     if(count === maxClicks){
       imgSection.removeEventListener('click', handleClick);
+      resultRender();
     }
+    render();
   }
 
-  function resultRender(){
-    const division =  document.getElementById('result');
-    const ulEl = document.createElement('ul');
-    division.appendChild(ulEl);
-    for (let i = 0; i < product.length; i++) {
-      const liEl = document.createElement('li');
-      ulEl.appendChild(liEl);
-      ulEl.textContent= `${event.target.title}:${Mall.all[i].votes}`;
-    }
-  }
-  resultRender();
+
 }
-
+function resultRender(){
+  const division =  document.getElementById('result');
+  console.log('hii')
+  const ulEl = document.createElement('ul');
+  division.appendChild(ulEl);
+  for (let i = 0; i < Mall.all.length; i++) {
+    console.log('wded')
+    let liEl = document.createElement('li');
+    ulEl.appendChild(liEl);
+    liEl.textContent= `${Mall.all[i].item}:${Mall.all[i].votes} and  ${Mall.all[i].views} times`;
+  }
+}
 
 
 ///----------------------------------------------------///
