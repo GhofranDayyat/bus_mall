@@ -61,99 +61,42 @@ const wineGlass = new Mall ('wine glass', 'img/wine-glass.jpg');
 
 //////////////////////////render function//////////////////////////
 function render() {
-  //------------leftIndwx---------------
-  let leftIndex = randomNumber(0, Mall.all.length - 1);
-  let flag1 = false;
-
-  while(true) {
-    switch (leftIndex) {
-    case preLeftIndex:
-    case preMidIndex:
-    case preRightIndex:
-      leftIndex = randomNumber(0, Mall.all.length - 1);
-
-      continue;
-    default:
-      flag1=true;
-      break ;
-    }
-    if(flag1){
+  let leftIndex = randomNumber(0, Mall.all.length -1);
+  while (leftIndex === preLeftIndex || leftIndex === preMidIndex || leftIndex === preRightIndex) {
+    leftIndex = randomNumber(0, Mall.all.length -1);
+    if(leftIndex !== preLeftIndex && leftIndex !== preMidIndex && leftIndex !== preRightIndex){
       break;
     }
   }
   leftImg.src = Mall.all[leftIndex].path;
   leftImg.title = Mall.all[leftIndex].item;
   leftImg.alt = Mall.all[leftIndex].item;
-
-
-  //  -----------------middleIndex------------------------
-  let midIndex = randomNumber(0, Mall.all.length - 1);
-  while (midIndex === leftIndex) {
-    midIndex = randomNumber (0,Mall.all.length -1);
-  }
-  let flag2 = false;
-  while(true) {
-    switch (midIndex) {
-    case preLeftIndex:
-    case preMidIndex:
-    case preRightIndex:
-      midIndex = randomNumber(0, Mall.all.length - 1);
-      continue;
-    default:
-      flag2=true;
-      break ;
-
-    }
-    if (flag2 ){
+  Mall.all[leftIndex].views++;
+  let midIndex = randomNumber(0, Mall.all.length -1);
+  while (midIndex === preLeftIndex || midIndex === preMidIndex || midIndex === preRightIndex || midIndex === leftIndex) {
+    midIndex = randomNumber(0, Mall.all.length -1);
+    if(midIndex !== preLeftIndex && midIndex !== preMidIndex && midIndex !== preRightIndex && midIndex !== leftIndex) {
       break;
     }
   }
   midImg.src = Mall.all[midIndex].path;
   midImg.title = Mall.all[midIndex].item;
   midImg.alt = Mall.all[midIndex].item;
-
-  // -------------rightIndex------------------------
-  let rightIndex = randomNumber(0, Mall.all.length - 1);
-  while (rightIndex === leftIndex || rightIndex === midIndex) {
-    rightIndex = randomNumber (0,Mall.all.length -1);
-  }
-  let flag3 = false;
-  while(true) {
-    switch (midIndex) {
-    case preLeftIndex:
-    case preMidIndex:
-    case preRightIndex:
-      midIndex = randomNumber(0, Mall.all.length - 1);
-      continue;
-    default:
-      flag3=true;
-      break ;
-    }
-    if (flag3 ){
+  Mall.all[midIndex].views++;
+  let rightIndex = randomNumber(0, Mall.all.length -1);
+  while (rightIndex === preLeftIndex || rightIndex === preMidIndex || rightIndex === preRightIndex || rightIndex === leftIndex || rightIndex === midIndex) {
+    rightIndex = randomNumber(0, Mall.all.length -1);
+    if(rightIndex !== preLeftIndex && rightIndex !== preMidIndex && rightIndex !== preRightIndex && rightIndex !== leftIndex && rightIndex !== midIndex){
       break;
     }
   }
   rightImg.src = Mall.all[rightIndex].path;
-  rightImg.title = Mall.all[rightIndex].item;
-  rightImg.alt = Mall.all[rightIndex].item;
-
+  rightImg.title = Mall.all[rightIndex].name;
+  rightImg.alt = Mall.all[rightIndex].name;
+  Mall.all[rightIndex].views++;
   preLeftIndex = leftIndex;
   preMidIndex = midIndex;
   preRightIndex = rightIndex;
-
-  //-----------calc the Views-----------
-  for (let i = 0; i < Mall.all.length; i++) {
-    switch (i) {
-    case leftIndex:
-    case midIndex:
-    case rightIndex:
-      Mall.all[i].views++;
-      break;
-    default:
-      break;
-    }
-    // console.log('views',Mall.all[i].views);
-  }
 }
 render();
 
