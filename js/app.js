@@ -8,14 +8,16 @@ function randomNumber(min, max) {
 let count =0;
 const maxClicks=25;
 const product = [];
-
+let preLeftIndex;
+let preMidIndex ;
+let preRightIndex ;
 
 const leftImg = document.getElementById('left_img');
-console.log(leftImg);
+// console.log(leftImg);
 const midImg = document.getElementById('mid_img');
-console.log(midImg);
+// console.log(midImg);
 const rightImg = document.getElementById('right_img');
-console.log(rightImg);
+// console.log(rightImg);
 const imgSection = document.getElementById('img-section');
 
 //construction function
@@ -52,31 +54,94 @@ const waterCan = new Mall ('water can', 'img/water-can.jpg');
 const wineGlass = new Mall ('wine glass', 'img/wine-glass.jpg');
 
 
-console.table(Mall.all); //show objects in table
+// console.table(Mall.all); //show objects in table
 
 
 
 
 //////////////////////////render function//////////////////////////
 function render() {
-  const leftIndex = randomNumber (0,Mall.all.length -1);
+  //------------leftIndwx---------------
+  let leftIndex = randomNumber(0, Mall.all.length - 1);
+  let flag1 = false;
+
+  while(true) {
+    switch (leftIndex) {
+    case preLeftIndex:
+    case preMidIndex:
+    case preRightIndex:
+      leftIndex = randomNumber(0, Mall.all.length - 1);
+
+      continue;
+    default:
+      flag1=true;
+      break ;
+    }
+    if(flag1){
+      break;
+    }
+  }
   leftImg.src = Mall.all[leftIndex].path;
   leftImg.title = Mall.all[leftIndex].item;
   leftImg.alt = Mall.all[leftIndex].item;
-  let midIndex = randomNumber (0,Mall.all.length -1);
+
+
+  //  -----------------middleIndex------------------------
+  let midIndex = randomNumber(0, Mall.all.length - 1);
   while (midIndex === leftIndex) {
     midIndex = randomNumber (0,Mall.all.length -1);
+  }
+  let flag2 = false;
+  while(true) {
+    switch (midIndex) {
+    case preLeftIndex:
+    case preMidIndex:
+    case preRightIndex:
+      midIndex = randomNumber(0, Mall.all.length - 1);
+      continue;
+    default:
+      flag2=true;
+      break ;
+
+    }
+    if (flag2 ){
+      break;
+    }
   }
   midImg.src = Mall.all[midIndex].path;
   midImg.title = Mall.all[midIndex].item;
   midImg.alt = Mall.all[midIndex].item;
-  let rightIndex = randomNumber (0,Mall.all.length -1);
+
+  // ---------rightIndex-------------
+  let rightIndex = randomNumber(0, Mall.all.length - 1);
   while (rightIndex === leftIndex || rightIndex === midIndex) {
     rightIndex = randomNumber (0,Mall.all.length -1);
+  }
+  let flag3 = false;
+  while(true) {
+    switch (midIndex) {
+    case preLeftIndex:
+    case preMidIndex:
+    case preRightIndex:
+      midIndex = randomNumber(0, Mall.all.length - 1);
+      continue;
+    default:
+      flag3=true;
+      break ;
+    }
+    if (flag3 ){
+      break;
+    }
   }
   rightImg.src = Mall.all[rightIndex].path;
   rightImg.title = Mall.all[rightIndex].item;
   rightImg.alt = Mall.all[rightIndex].item;
+
+  preLeftIndex = leftIndex;
+  preMidIndex = midIndex;
+  preRightIndex = rightIndex;
+
+  //-----------calc the Views-----------
   for (let i = 0; i < Mall.all.length; i++) {
     switch (i) {
     case leftIndex:
@@ -87,20 +152,21 @@ function render() {
     default:
       break;
     }
-    console.log('views',Mall.all[i].views);
+    // console.log('views',Mall.all[i].views);
   }
 }
 render();
 
+/////////////////////Listener///////////////////
 imgSection.addEventListener('click' , handleClick);
 
 function handleClick(event) {
   console.log('Target', event.target.id + ':',event.target.title);
+  console.log(event);
   if (event.target.id !== 'img-section'){
-
     for( let i=0 ; i<Mall.all.length; i++){
 
-      if (Mall.all[i].item=== event.target.title){
+      if (Mall.all[i].item === event.target.title){
         Mall.all[i].votes++; //Mall.all[i].votes =Mall.all[i].votes + 1
 
         console.log('votes',Mall.all[i].votes);
@@ -109,31 +175,29 @@ function handleClick(event) {
     }
 
     count = count + 1;
-    console.log(count);
+    // console.log(count);
     if(count === maxClicks){
       imgSection.removeEventListener('click', handleClick);
       resultRender();
+      createChart();
     }
     render();
   }
-  createChart();
-
+////////////////Result////////////////
 }
 function resultRender(){
   const division =  document.getElementById('result');
-  console.log('hii');
   const ulEl = document.createElement('ul');
   division.appendChild(ulEl);
   for (let i = 0; i < Mall.all.length; i++) {
-    console.log('wded');
     let liEl = document.createElement('li');
     ulEl.appendChild(liEl);
-    liEl.textContent= `${Mall.all[i].item}:${Mall.all[i].votes} and  ${Mall.all[i].views} times`;
+    liEl.textContent= `${Mall.all[i].item}:${Mall.all[i].votes} Votes and  ${Mall.all[i].views} times`;
   }
 }
 
 
-///-------------------------creat chart---------------------------///
+/////////////////////creat chart////////////////////
 function createChart (){
   const ctx = document.getElementById('chart').getContext('2d');
   const itemName = [];
@@ -144,29 +208,10 @@ function createChart (){
     itemVotes.push(Mall.all[i].votes);
     itemViews.push(Mall.all[i].views);
   }
-  console.log('vots', itemVotes);
-  console.log('views', itemViews );
+  // console.log('vots', itemVotes);
+  // console.log('views', itemViews );
 
-  // new Chart (ctx,{
-  //   // The type of chart we want to create
-  //   type: 'bar',
-  //   date: {
-  //     lebels: itemName,
-  //     datasets: [
-  //       {
-  //         barpercentage: 0.5,
-  //         label: 'Result of Votes & Views',
-  //         backgroundcolor: 'rgb(100, 125, 50)',
-  //         bordercolor: '#1212',
-  //         data: itemVotes,
-  //       },
-  //     ],
-  //   },
-  //   // Configuration options go here
-  //   options: {},
-  // }
 
-  // );
   new Chart(ctx, {
     // The type of chart we want to create
     type: 'bar',
@@ -179,7 +224,7 @@ function createChart (){
           // barPercentage: 0.8,
           barThickness: 20,
           borderWidth: 2.5,
-          label: 'Result of Votes & Views',
+          label: 'Result of Votes',
           backgroundColor: 'rgb(0, 0, 200,0.5)',
           borderColor: 'rgb(0, 0, 0)',
           data: itemVotes,
@@ -187,10 +232,10 @@ function createChart (){
           barPercentage: 0.5,
           barThickness: 20,
           borderWidth: 2.5,
-          label: 'Result of Votes & Views',
+          label: 'Result Of Views',
           backgroundColor: 'rgb(255,99,132,0.2)',
           borderColor: 'rgb(0, 0, 0)',
-          data: itemVotes,
+          data: itemViews,
         }
       ],
     },
@@ -200,5 +245,3 @@ function createChart (){
 
   } );
 }
-
-
