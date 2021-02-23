@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 'use strict';
-
 //helper functions
 function randomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -11,7 +10,8 @@ const product = [];
 let preLeftIndex;
 let preMidIndex ;
 let preRightIndex ;
-
+const itemVotes = [];
+const itemViews = [];
 const leftImg = document.getElementById('left_img');
 // console.log(leftImg);
 const midImg = document.getElementById('mid_img');
@@ -162,7 +162,6 @@ imgSection.addEventListener('click' , handleClick);
 
 function handleClick(event) {
   console.log('Target', event.target.id + ':',event.target.title);
-  console.log(event);
   if (event.target.id !== 'img-section'){
     for( let i=0 ; i<Mall.all.length; i++){
 
@@ -180,6 +179,8 @@ function handleClick(event) {
       imgSection.removeEventListener('click', handleClick);
       resultRender();
       createChart();
+      fillLocalStorage();
+      retrieve();
     }
     render();
   }
@@ -195,23 +196,23 @@ function resultRender(){
     liEl.textContent= `${Mall.all[i].item}:${Mall.all[i].votes} Votes and  ${Mall.all[i].views} times`;
   }
 }
+//////convert JS to JSON ////////
+function fillLocalStorage(){
+  localStorage.setItem('votes',JSON.stringify(itemVotes));
+  localStorage.setItem('views',JSON.stringify(itemViews));
+  console.log(localStorage);
+}
 
 
 /////////////////////creat chart////////////////////
 function createChart (){
   const ctx = document.getElementById('chart').getContext('2d');
   const itemName = [];
-  const itemVotes = [];
-  const itemViews = [];
   for (let i=0; i<Mall.all.length;i++){
     itemName.push(Mall.all[i].item);
     itemVotes.push(Mall.all[i].votes);
     itemViews.push(Mall.all[i].views);
   }
-  // console.log('vots', itemVotes);
-  // console.log('views', itemViews );
-
-
   new Chart(ctx, {
     // The type of chart we want to create
     type: 'bar',
@@ -245,3 +246,22 @@ function createChart (){
 
   } );
 }
+function retrieve(){
+  if (localStorage>0){
+    ///////to convert JSON to JS //////////
+    const storVotes=JSON.parse(localStorage.getItem('votes'));
+    const storViews=JSON.parse(localStorage.getItem('views'));
+    for (let i=0; i<itemVotes.length ;i++){
+      itemVotes[i]+=storVotes[i];
+      itemViews[i]+=storViews[i];
+
+      render();
+      console.log(localStorage);
+
+    }
+
+  }
+  console.log(localStorage);
+
+}
+
