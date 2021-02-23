@@ -112,7 +112,7 @@ function render() {
   midImg.title = Mall.all[midIndex].item;
   midImg.alt = Mall.all[midIndex].item;
 
-  // ---------rightIndex-------------
+  // -------------rightIndex------------------------
   let rightIndex = randomNumber(0, Mall.all.length - 1);
   while (rightIndex === leftIndex || rightIndex === midIndex) {
     rightIndex = randomNumber (0,Mall.all.length -1);
